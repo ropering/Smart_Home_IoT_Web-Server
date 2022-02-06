@@ -4,9 +4,43 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#sensor").click(function() {
+                $(this).val('sdf')
+            })
+    
+            $("#temp").click(function() {
+                $(this).val('humidity : {{hum}}')
+            })
+        })
+        // update sensor data
+        function update_data() {
+            $.ajax({
+                type: "GET",
+                url: "get_value",
+                data: {},
+                success: function(response) {
+                    $("#temp").text("temperature: "+ response["temp"])
+                    $("#hum").text("humidity: "+ response["hum"])
+                    console.log(response);
+                },
+                error: function() {
+                    alert('통신실패!!');
+                },
+            })
+        }
+        // execute function every 2 sec
+        $(document).ready(function() {
+            playTimer = setInterval(function() {
+                update_data();
+            }, 3000)
+        })
+    </script>
 </head>
 <body>
-    <p>temperature : {{temp}}</p>
-    <p>humidity : {{hum}}</p>
+    <div id="temp"></div>
+    <div id="hum"></div>
 </body>
 </html>
